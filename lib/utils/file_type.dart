@@ -24,7 +24,7 @@ extension FileTypeExtensions on FileType {
               : this == FileType.image
                   ? Ionicons.image_outline
                   : this == FileType.program
-                      ? Ionicons.apps_outline
+                      ? Ionicons.cube_outline
                       : Ionicons.help_outline;
 
   get getIcon => Icon(

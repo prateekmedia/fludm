@@ -64,7 +64,7 @@ class DownloadItemWidget extends StatelessWidget {
                         ),
                         Text(
                           (item.status.isDownloading
-                                  ? item.actual.getFileSize + '/'
+                                  ? item.actual.getFileSize + ' / '
                                   : '') +
                               "${item.total.getFileSize}   3 MB/s    40 min",
                           style: context.textTheme.bodyText2!
