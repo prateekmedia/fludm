@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=FluDM
+Exec=fludm %u
+Icon=fludm
+StartupNotify=false
+Terminal=false
+StartupWMClass=fludm
+Categories=Utility;
