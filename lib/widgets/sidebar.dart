@@ -97,14 +97,14 @@ class _SidebarItemBuilder extends StatelessWidget {
               ? Border(
                   left: BorderSide(
                     color: context.primaryColor,
-                    width: 5,
+                    width: 3,
                   ),
                 )
               : null,
         ),
         child: Row(
           children: [
-            if (!isActive) const SizedBox(width: 5),
+            if (!isActive) const SizedBox(width: 3),
             if (icon != null) ...[
               Theme(
                   data: context.theme.copyWith(

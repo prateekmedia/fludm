@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:fludm/utils/utils.dart';
-import 'package:fludm/widgets/sidebar.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:fludm/widgets/widgets.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,10 +22,10 @@ class MyApp extends StatelessWidget {
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         primarySwatch: Colors.deepPurple,
-        primaryColor: Colors.deepPurple[100],
+        primaryColor: Colors.purple[200],
         fontFamily: 'Poppins',
       ),
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.dark,
       home: const MyHomePage(),
     );
   }
@@ -49,59 +47,117 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Sidebar(
-            currentIndex: currentIndex,
-            onTap: (index) {
-              currentIndex = index;
-              setState(() {});
-            },
-            start: Container(
-              margin: const EdgeInsets.symmetric(vertical: 24),
-              child: Text(
-                "FluDM",
-                style: Theme.of(context)
-                    .textTheme
-                    .headline6!
-                    .copyWith(fontWeight: FontWeight.bold, letterSpacing: 0.5),
+          if (context.width > 700)
+            Sidebar(
+              currentIndex: currentIndex,
+              onTap: (index) {
+                currentIndex = index;
+                setState(() {});
+              },
+              start: Container(
+                margin: const EdgeInsets.symmetric(vertical: 24),
+                child: Text(
+                  "FluDM",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6!
+                      .copyWith(fontWeight: FontWeight.bold, letterSpacing: 1),
+                ),
               ),
+              items: [
+                SidebarItem(
+                  icon: const Icon(Ionicons.arrow_down_circle_outline),
+                  label: 'All Downloads',
+                ),
+                SidebarItem(
+                  icon: const Icon(Ionicons.download_outline),
+                  label: 'Downloading',
+                ),
+                SidebarItem(
+                  icon: const Icon(Ionicons.checkmark_circle_outline),
+                  label: 'Completed',
+                ),
+              ],
             ),
-            items: [
-              SidebarItem(
-                icon: const Icon(LineAwesomeIcons.arrow_circle_down),
-                label: 'All Downloads',
-              ),
-              SidebarItem(
-                icon: const Icon(LineAwesomeIcons.download),
-                label: 'Downloading',
-              ),
-              SidebarItem(
-                icon: const Icon(LineAwesomeIcons.check_circle),
-                label: 'Finished',
-              ),
-            ],
-          ),
           Expanded(
-            child: Padding(
+            child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (currentIndex != 2) ...[
-                    Text(
-                      "Downloading",
-                      style: context.textTheme.headline5!
-                          .copyWith(fontWeight: FontWeight.w600),
-                    )
-                  ],
-                  if (currentIndex != 1) ...[
-                    Text(
-                      "Finished",
-                      style: context.textTheme.headline5!
-                          .copyWith(fontWeight: FontWeight.w600),
-                    )
-                  ],
+              children: [
+                if (currentIndex != 2) ...[
+                  Text(
+                    "Downloading",
+                    style: context.textTheme.headline6!
+                        .copyWith(fontWeight: FontWeight.w600),
+                  ),
+                  DownloadItemWidget(
+                    item: DownloadItem(
+                      name: "Cold - Copyright free song.mp3",
+                      type: FileType.audio,
+                      actual: 4200000,
+                      total: 9000000,
+                      path: "/home/user/",
+                      status: DownloadStatus.downloading,
+                    ),
+                  ),
+                  DownloadItemWidget(
+                    item: DownloadItem(
+                      name: "Cold - Copyright free music video.mp4",
+                      type: FileType.video,
+                      actual: 12000000,
+                      total: 50000000,
+                      path: "/home/user/",
+                      status: DownloadStatus.downloading,
+                    ),
+                  ),
+                  DownloadItemWidget(
+                    item: DownloadItem(
+                      name: "Cold - Copyright free music video.zip",
+                      type: FileType.compressed,
+                      actual: 8000000,
+                      total: 40000000,
+                      path: "/home/user/",
+                      status: DownloadStatus.downloading,
+                    ),
+                  ),
                 ],
-              ),
+                if (currentIndex != 1) ...[
+                  Text(
+                    "Completed",
+                    style: context.textTheme.headline6!
+                        .copyWith(fontWeight: FontWeight.w600),
+                  ),
+                  DownloadItemWidget(
+                    item: DownloadItem(
+                      name: "Cold - Copyright free album art.png",
+                      type: FileType.image,
+                      actual: 150000,
+                      total: 300000,
+                      path: "/home/user/",
+                      status: DownloadStatus.complete,
+                    ),
+                  ),
+                  DownloadItemWidget(
+                    item: DownloadItem(
+                      name: "Cold - Copyright free app.exe",
+                      type: FileType.program,
+                      actual: 140000000,
+                      total: 300000000,
+                      path: "/home/user/",
+                      status: DownloadStatus.complete,
+                    ),
+                  ),
+                  DownloadItemWidget(
+                    item: DownloadItem(
+                      name: "Cold - Copyright free.crx",
+                      type: FileType.other,
+                      actual: 150000000,
+                      total: 600000000,
+                      path: "/home/user/",
+                      status: DownloadStatus.complete,
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
         ],
