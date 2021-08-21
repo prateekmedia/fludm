@@ -1,6 +1,8 @@
 import 'package:fludm/utils/utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:intl/intl.dart';
 
 class DownloadItem {
   final String name;
@@ -9,6 +11,7 @@ class DownloadItem {
   final FileType type;
   final DownloadStatus status;
   final String path;
+  final DateTime datetime;
 
   DownloadItem({
     required this.name,
@@ -17,6 +20,7 @@ class DownloadItem {
     required this.type,
     required this.status,
     required this.path,
+    required this.datetime,
   });
 }
 
@@ -76,12 +80,11 @@ class DownloadItemWidget extends StatelessWidget {
                           (item.isDownloadingOrPaused
                                   ? item.actual.getFileSize + ' / '
                                   : '') +
-                              "${item.total.getFileSize}   ·   3 MB/s   ·   " +
-                              (item.isPaused
-                                  ? "Paused"
-                                  : item.isCancelled
-                                      ? "Cancelled"
-                                      : "40 min"),
+                              "${item.total.getFileSize}   ·   ${item.isDownloadingOrPaused ? "3 MB/s   ·   " : ""}"
+                                  "${DateFormat('MMM dd yyyy').format(item.datetime)}   ·   " +
+                              (item.isDownloading
+                                  ? "40 min"
+                                  : describeEnum(item.status).capitalize),
                           style: context.textTheme.bodyText2!
                               .copyWith(fontSize: 12),
                         ),
@@ -104,7 +107,7 @@ class DownloadItemWidget extends StatelessWidget {
                         size: 20,
                       ),
                       const SizedBox(width: 15),
-                      const Icon(Ionicons.stop_outline, size: 20),
+                      const Icon(Ionicons.close_outline, size: 20),
                     ] else ...[
                       const Icon(Ionicons.trash_bin_outline, size: 20),
                     ],

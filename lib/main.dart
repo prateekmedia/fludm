@@ -50,6 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
         actual: 4200000,
         total: 9000000,
         path: "/home/user/",
+        datetime: DateTime.now().subtract(const Duration(seconds: 10)),
         status: DownloadStatus.downloading,
       ),
       DownloadItem(
@@ -58,6 +59,8 @@ class _MyHomePageState extends State<MyHomePage> {
         actual: 38000000,
         total: 50000000,
         path: "/home/user/",
+        datetime:
+            DateTime.now().subtract(const Duration(seconds: 10, days: 10)),
         status: DownloadStatus.paused,
       ),
       DownloadItem(
@@ -66,6 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
         actual: 8000000,
         total: 40000000,
         path: "/home/user/",
+        datetime: DateTime.now().subtract(const Duration(seconds: 10, days: 1)),
         status: DownloadStatus.downloading,
       ),
       DownloadItem(
@@ -74,6 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
         actual: 300000,
         total: 300000,
         path: "/home/user/",
+        datetime: DateTime.now().subtract(const Duration(seconds: 10, days: 1)),
         status: DownloadStatus.completed,
       ),
       DownloadItem(
@@ -82,6 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
         actual: 50000000,
         total: 300000000,
         path: "/home/user/",
+        datetime: DateTime.now().subtract(const Duration(seconds: 10, days: 4)),
         status: DownloadStatus.cancelled,
       ),
       DownloadItem(
@@ -90,6 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
         actual: 600000000,
         total: 600000000,
         path: "/home/user/",
+        datetime: DateTime.now().subtract(const Duration(seconds: 10, days: 6)),
         status: DownloadStatus.completed,
       ),
     ];
