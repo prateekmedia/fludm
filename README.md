@@ -25,8 +25,8 @@
 
 ```bash
 # Download dependencies
-$ flutter pub get; flutter create .
+flutter pub get; flutter create .
 
 # For Direct Testing
-$ flutter build <windows/macos/linux>
+flutter build <windows/macos/linux>
 ```
