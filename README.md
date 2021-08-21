@@ -1,7 +1,7 @@
 <p align="center">
 <img src="https://raw.githubusercontent.com/prateekmedia/fludm/main/assets/fludm.png">
 
-<b>*Logo is not finalized</b>
+<b align="center">*Logo is not finalized</b>
 </p>
 <h1 align="center">FluDM</h1>
 <p align="center"><b>A fast and modern download manager made using flutter, Under Development.</b></p>
