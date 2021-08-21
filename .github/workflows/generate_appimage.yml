@@ -1,6 +1,11 @@
 name: FlutterAppImageCI
 
-on: [push, workflow_dispatch]
+on: 
+  push:
+    paths-ignore:
+    - 'README.md' 
+    - 'docs/' 
+  workflow_dispatch:
 
 jobs:
   build-appimage:
