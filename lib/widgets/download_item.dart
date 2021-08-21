@@ -20,6 +20,16 @@ class DownloadItem {
   });
 }
 
+extension DownloadStatExtension on DownloadItem {
+  bool get isDownloading => status.index == 0 ? true : false;
+  bool get isPaused => status.index == 1 ? true : false;
+  bool get isCancelled => status.index == 2 ? true : false;
+  bool get isCompleted => status.index == 3 ? true : false;
+
+  bool get isDownloadingOrPaused => isDownloading || isPaused ? true : false;
+  bool get isCancelledOrCompleted => isCancelled || isCompleted ? true : false;
+}
+
 class DownloadItemWidget extends StatelessWidget {
   final DownloadItem item;
 
@@ -35,12 +45,12 @@ class DownloadItemWidget extends StatelessWidget {
         color: context.isDark ? Colors.grey[900] : Colors.grey[200],
         borderRadius: BorderRadius.circular(15),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      padding: const EdgeInsets.all(14),
       margin: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: item.type.getColor,
@@ -63,36 +73,53 @@ class DownloadItemWidget extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
-                          (item.status.isDownloading
+                          (item.isDownloadingOrPaused
                                   ? item.actual.getFileSize + ' / '
                                   : '') +
-                              "${item.total.getFileSize}   3 MB/s    40 min",
+                              "${item.total.getFileSize}   ·   3 MB/s   ·   " +
+                              (item.isPaused
+                                  ? "Paused"
+                                  : item.isCancelled
+                                      ? "Cancelled"
+                                      : "40 min"),
                           style: context.textTheme.bodyText2!
                               .copyWith(fontSize: 12),
                         ),
                       ],
                     )),
-                    if (item.status.isDownloading) ...[
-                      const Icon(Ionicons.pause_outline, size: 22),
-                      const SizedBox(width: 12),
-                      const Icon(Ionicons.stop_outline, size: 22),
+                    if (item.isCompleted) ...[
+                      const Icon(Ionicons.folder_outline, size: 20),
+                      const SizedBox(width: 15),
+                      const Icon(Ionicons.open_outline, size: 20),
+                      const SizedBox(width: 15),
+                    ] else if (item.isCancelled) ...[
+                      const Icon(Icons.restart_alt_outlined, size: 20),
+                      const SizedBox(width: 15),
+                    ],
+                    if (item.isDownloadingOrPaused) ...[
+                      Icon(
+                        item.isPaused
+                            ? Ionicons.play_outline
+                            : Ionicons.pause_outline,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 15),
+                      const Icon(Ionicons.stop_outline, size: 20),
                     ] else ...[
-                      const Icon(Ionicons.folder_outline, size: 22),
-                      const SizedBox(width: 12),
-                      const Icon(Icons.restart_alt_outlined, size: 22),
-                      const SizedBox(width: 12),
-                      const Icon(Ionicons.trash_bin_outline, size: 22),
+                      const Icon(Ionicons.trash_bin_outline, size: 20),
                     ],
                   ],
                 ),
-                if (item.status.isDownloading)
+                if (item.isDownloadingOrPaused)
                   Container(
                     margin: const EdgeInsets.symmetric(vertical: 4),
                     child: LinearProgressIndicator(
-                      value: 4.7 / 9.2,
+                      value: item.actual / item.total,
                       backgroundColor:
                           context.isDark ? Colors.grey[700] : Colors.grey[50],
-                      color: item.type.getColor,
+                      color: item.status == DownloadStatus.paused
+                          ? Colors.grey
+                          : context.primaryColor,
                     ),
                   )
               ],

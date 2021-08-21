@@ -13,8 +13,8 @@ extension FileTypeExtensions on FileType {
               : this == FileType.image
                   ? Colors.orange[600]
                   : this == FileType.program
-                      ? Colors.green[600]
-                      : Colors.blueGrey;
+                      ? Colors.green[700]
+                      : Colors.blueGrey[600];
   get getIconData => this == FileType.audio
       ? Ionicons.musical_note_outline
       : this == FileType.video
@@ -30,5 +30,6 @@ extension FileTypeExtensions on FileType {
   get getIcon => Icon(
         getIconData,
         color: Colors.white,
+        size: 23,
       );
 }

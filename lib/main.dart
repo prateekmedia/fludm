@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.purple[200],
         fontFamily: 'Poppins',
       ),
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.system,
       home: const MyHomePage(),
     );
   }
@@ -43,6 +43,57 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    List<DownloadItem> downloadItems = [
+      DownloadItem(
+        name: "Cold - Copyright free song.mp3",
+        type: FileType.audio,
+        actual: 4200000,
+        total: 9000000,
+        path: "/home/user/",
+        status: DownloadStatus.downloading,
+      ),
+      DownloadItem(
+        name: "Cold - Copyright free music video.mp4",
+        type: FileType.video,
+        actual: 38000000,
+        total: 50000000,
+        path: "/home/user/",
+        status: DownloadStatus.paused,
+      ),
+      DownloadItem(
+        name: "Cold - Copyright free music video.zip",
+        type: FileType.compressed,
+        actual: 8000000,
+        total: 40000000,
+        path: "/home/user/",
+        status: DownloadStatus.downloading,
+      ),
+      DownloadItem(
+        name: "Cold - Copyright free album art.png",
+        type: FileType.image,
+        actual: 300000,
+        total: 300000,
+        path: "/home/user/",
+        status: DownloadStatus.completed,
+      ),
+      DownloadItem(
+        name: "Cold - Copyright free app.exe",
+        type: FileType.program,
+        actual: 50000000,
+        total: 300000000,
+        path: "/home/user/",
+        status: DownloadStatus.cancelled,
+      ),
+      DownloadItem(
+        name: "Cold - Copyright free.crx",
+        type: FileType.other,
+        actual: 600000000,
+        total: 600000000,
+        path: "/home/user/",
+        status: DownloadStatus.completed,
+      ),
+    ];
+
     return Scaffold(
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -86,76 +137,27 @@ class _MyHomePageState extends State<MyHomePage> {
                 if (currentIndex != 2) ...[
                   Text(
                     "Downloading",
-                    style: context.textTheme.headline6!
+                    style: context.textTheme.bodyText1!
                         .copyWith(fontWeight: FontWeight.w600),
                   ),
-                  DownloadItemWidget(
-                    item: DownloadItem(
-                      name: "Cold - Copyright free song.mp3",
-                      type: FileType.audio,
-                      actual: 4200000,
-                      total: 9000000,
-                      path: "/home/user/",
-                      status: DownloadStatus.downloading,
-                    ),
-                  ),
-                  DownloadItemWidget(
-                    item: DownloadItem(
-                      name: "Cold - Copyright free music video.mp4",
-                      type: FileType.video,
-                      actual: 12000000,
-                      total: 50000000,
-                      path: "/home/user/",
-                      status: DownloadStatus.downloading,
-                    ),
-                  ),
-                  DownloadItemWidget(
-                    item: DownloadItem(
-                      name: "Cold - Copyright free music video.zip",
-                      type: FileType.compressed,
-                      actual: 8000000,
-                      total: 40000000,
-                      path: "/home/user/",
-                      status: DownloadStatus.downloading,
-                    ),
-                  ),
+                  ...downloadItems
+                      .where((element) => element.isDownloadingOrPaused)
+                      .map(
+                        (item) => DownloadItemWidget(item: item),
+                      ),
+                  const SizedBox(height: 15),
                 ],
                 if (currentIndex != 1) ...[
                   Text(
                     "Completed",
-                    style: context.textTheme.headline6!
+                    style: context.textTheme.bodyText1!
                         .copyWith(fontWeight: FontWeight.w600),
                   ),
-                  DownloadItemWidget(
-                    item: DownloadItem(
-                      name: "Cold - Copyright free album art.png",
-                      type: FileType.image,
-                      actual: 150000,
-                      total: 300000,
-                      path: "/home/user/",
-                      status: DownloadStatus.complete,
-                    ),
-                  ),
-                  DownloadItemWidget(
-                    item: DownloadItem(
-                      name: "Cold - Copyright free app.exe",
-                      type: FileType.program,
-                      actual: 140000000,
-                      total: 300000000,
-                      path: "/home/user/",
-                      status: DownloadStatus.complete,
-                    ),
-                  ),
-                  DownloadItemWidget(
-                    item: DownloadItem(
-                      name: "Cold - Copyright free.crx",
-                      type: FileType.other,
-                      actual: 150000000,
-                      total: 600000000,
-                      path: "/home/user/",
-                      status: DownloadStatus.complete,
-                    ),
-                  ),
+                  ...downloadItems
+                      .where((element) => element.isCancelledOrCompleted)
+                      .map(
+                        (item) => DownloadItemWidget(item: item),
+                      ),
                 ],
               ],
             ),

@@ -28,9 +28,12 @@ class Sidebar extends StatelessWidget {
     return Container(
       width: 250,
       decoration: BoxDecoration(
+        color: context.isDark ? Colors.grey[900] : Colors.grey[200],
         border: Border(
           right: BorderSide(
-              color: context.isDark ? Colors.grey[800]! : Colors.grey[300]!),
+            color: (context.isDark ? Colors.grey[800]! : Colors.grey[300]!)
+                .withAlpha(60),
+          ),
         ),
       ),
       child: Column(
@@ -92,7 +95,7 @@ class _SidebarItemBuilder extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 14),
         margin: const EdgeInsets.only(bottom: 15),
         decoration: BoxDecoration(
-          color: isActive ? context.primaryColor.withAlpha(10) : null,
+          color: isActive ? context.theme.canvasColor.withAlpha(130) : null,
           border: isActive
               ? Border(
                   left: BorderSide(
