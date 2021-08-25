@@ -3,7 +3,7 @@ import 'package:fludm/utils/utils.dart';
 
 class Sidebar extends StatelessWidget {
   final Widget? start;
-  final Widget? end;
+  final SidebarItem? endItem;
 
   /// The index of the current selected item from [items]
   final int currentIndex;
@@ -20,7 +20,7 @@ class Sidebar extends StatelessWidget {
     required this.currentIndex,
     required this.onTap,
     this.start,
-    this.end,
+    this.endItem,
   }) : super(key: key);
 
   @override
@@ -56,7 +56,14 @@ class Sidebar extends StatelessWidget {
                   .toList(),
             ),
           ),
-          if (end != null) end!,
+          if (endItem != null)
+            _SidebarItemBuilder(
+              label: endItem!.label,
+              icon: endItem!.icon,
+              margin: EdgeInsets.zero,
+              onTap: () => onTap(items.length),
+              isActive: currentIndex == items.length,
+            ),
         ],
       ),
     );
@@ -78,12 +85,14 @@ class _SidebarItemBuilder extends StatelessWidget {
   final String label;
   final bool isActive;
   final VoidCallback? onTap;
+  final EdgeInsets margin;
 
   const _SidebarItemBuilder({
     Key? key,
     required this.label,
     required this.icon,
     required this.isActive,
+    this.margin = const EdgeInsets.only(bottom: 15),
     this.onTap,
   }) : super(key: key);
 
@@ -93,7 +102,7 @@ class _SidebarItemBuilder extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 14),
-        margin: const EdgeInsets.only(bottom: 15),
+        margin: margin,
         decoration: BoxDecoration(
           color: isActive ? context.theme.canvasColor.withAlpha(130) : null,
           border: isActive

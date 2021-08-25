@@ -112,6 +112,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 currentIndex = index;
                 setState(() {});
               },
+              endItem: SidebarItem(
+                icon: const Icon(Ionicons.settings_outline),
+                label: 'Settings',
+              ),
               start: Container(
                 margin: const EdgeInsets.symmetric(vertical: 24),
                 child: Text(
@@ -141,12 +145,34 @@ class _MyHomePageState extends State<MyHomePage> {
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
               children: [
-                if (currentIndex != 2) ...[
-                  Text(
-                    "Downloading",
-                    style: context.textTheme.bodyText1!
-                        .copyWith(fontWeight: FontWeight.w600),
+                if (currentIndex <= 1) ...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Downloading",
+                        style: context.textTheme.headline6!
+                            .copyWith(fontWeight: FontWeight.w600),
+                      ),
+                      Row(
+                        children: const [
+                          HeaderButton(
+                            icon: Ionicons.play_outline,
+                            tooltip: 'Resume selected',
+                          ),
+                          HeaderButton(
+                            icon: Ionicons.pause_outline,
+                            tooltip: 'Pause selected',
+                          ),
+                          HeaderButton(
+                            icon: Ionicons.close_outline,
+                            tooltip: 'Cancel selected',
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
+                  const SizedBox(height: 6),
                   ...downloadItems
                       .where((element) => element.isDownloadingOrPaused)
                       .map(
@@ -154,17 +180,55 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                   const SizedBox(height: 15),
                 ],
-                if (currentIndex != 1) ...[
-                  Text(
-                    "Completed",
-                    style: context.textTheme.bodyText1!
-                        .copyWith(fontWeight: FontWeight.w600),
+                if (currentIndex <= 2 && currentIndex != 1) ...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Completed",
+                        style: context.textTheme.headline6!
+                            .copyWith(fontWeight: FontWeight.w600),
+                      ),
+                      Row(
+                        children: const [
+                          HeaderButton(
+                            icon: Icons.restart_alt_outlined,
+                            tooltip: 'Restart selected',
+                          ),
+                          HeaderButton(
+                            icon: Ionicons.trash_bin_outline,
+                            tooltip: 'Delete selected',
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
+                  const SizedBox(height: 6),
                   ...downloadItems
                       .where((element) => element.isCancelledOrCompleted)
                       .map(
                         (item) => DownloadItemWidget(item: item),
                       ),
+                ],
+                if (currentIndex == 3) ...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Settings",
+                        style: context.textTheme.headline6!
+                            .copyWith(fontWeight: FontWeight.w600),
+                      ),
+                      Row(
+                        children: const [
+                          HeaderButton(
+                            icon: Icons.restart_alt_outlined,
+                            tooltip: 'Restore defaults',
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ],
               ],
             ),
@@ -172,5 +236,39 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
     );
+  }
+}
+
+class HeaderButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback? onTap;
+  final String? tooltip;
+
+  const HeaderButton({
+    Key? key,
+    required this.icon,
+    this.onTap,
+    this.tooltip,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Color color =
+        onTap != null ? context.textTheme.bodyText1!.color! : Colors.grey;
+    var child = Container(
+      padding: const EdgeInsets.all(5),
+      margin: const EdgeInsets.only(right: 12),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color),
+      ),
+      child: Icon(icon, size: 15, color: color),
+    );
+    return tooltip != null
+        ? Tooltip(
+            message: tooltip!,
+            child: child,
+          )
+        : child;
   }
 }
