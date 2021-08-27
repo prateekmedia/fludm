@@ -34,7 +34,7 @@ extension DownloadStatExtension on DownloadItem {
   bool get isCancelledOrCompleted => isCancelled || isCompleted ? true : false;
 }
 
-class DownloadItemWidget extends StatelessWidget {
+class DownloadItemWidget extends StatefulWidget {
   final DownloadItem item;
 
   const DownloadItemWidget({
@@ -43,92 +43,111 @@ class DownloadItemWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<DownloadItemWidget> createState() => _DownloadItemWidgetState();
+}
+
+class _DownloadItemWidgetState extends State<DownloadItemWidget> {
+  bool isHovered = false;
+  set setHovered(bool hover) => setState(() {
+        isHovered = hover;
+      });
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: context.isDark ? Colors.grey[900] : Colors.grey[200],
-        borderRadius: BorderRadius.circular(15),
-      ),
-      padding: const EdgeInsets.all(14),
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: item.type.getColor,
+    return MouseRegion(
+      onHover: (_) => setHovered = true,
+      onExit: (_) => setHovered = false,
+      child: AnimatedContainer(
+        decoration: BoxDecoration(
+          color: isHovered
+              ? context.isDark
+                  ? Colors.grey[900]
+                  : Colors.grey[200]
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(15),
+        ),
+        curve: Curves.fastOutSlowIn,
+        padding: const EdgeInsets.all(14),
+        duration: const Duration(milliseconds: 150),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: widget.item.type.getColor,
+              ),
+              child: widget.item.type.getIcon,
             ),
-            child: item.type.getIcon,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                        child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item.name,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          (item.isDownloadingOrPaused
-                                  ? item.actual.getFileSize + ' / '
-                                  : '') +
-                              "${item.total.getFileSize}   ·   ${item.isDownloadingOrPaused ? "3 MB/s   ·   " : ""}"
-                                  "${DateFormat('MMM dd yyyy').format(item.datetime)}   ·   " +
-                              (item.isDownloading
-                                  ? "40 min"
-                                  : describeEnum(item.status).capitalize),
-                          style: context.textTheme.bodyText2!
-                              .copyWith(fontSize: 12),
-                        ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                          child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.item.name,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            (widget.item.isDownloadingOrPaused
+                                    ? widget.item.actual.getFileSize + ' / '
+                                    : '') +
+                                "${widget.item.total.getFileSize}   ·   ${widget.item.isDownloadingOrPaused ? "3 MB/s   ·   " : ""}"
+                                    "${DateFormat('MMM dd yyyy').format(widget.item.datetime)}   ·   " +
+                                (widget.item.isDownloading
+                                    ? "40 min"
+                                    : describeEnum(widget.item.status)
+                                        .capitalize),
+                            style: context.textTheme.bodyText2!
+                                .copyWith(fontSize: 12),
+                          ),
+                        ],
+                      )),
+                      if (widget.item.isCompleted) ...[
+                        const Icon(Ionicons.folder_outline, size: 20),
+                        const SizedBox(width: 15),
+                        const Icon(Ionicons.open_outline, size: 20),
+                        const SizedBox(width: 15),
+                      ] else if (widget.item.isCancelled) ...[
+                        const Icon(Icons.restart_alt_outlined, size: 20),
+                        const SizedBox(width: 15),
                       ],
-                    )),
-                    if (item.isCompleted) ...[
-                      const Icon(Ionicons.folder_outline, size: 20),
-                      const SizedBox(width: 15),
-                      const Icon(Ionicons.open_outline, size: 20),
-                      const SizedBox(width: 15),
-                    ] else if (item.isCancelled) ...[
-                      const Icon(Icons.restart_alt_outlined, size: 20),
-                      const SizedBox(width: 15),
+                      if (widget.item.isDownloadingOrPaused) ...[
+                        Icon(
+                          widget.item.isPaused
+                              ? Ionicons.play_outline
+                              : Ionicons.pause_outline,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 15),
+                        const Icon(Ionicons.close_outline, size: 20),
+                      ] else ...[
+                        const Icon(Ionicons.trash_bin_outline, size: 20),
+                      ],
                     ],
-                    if (item.isDownloadingOrPaused) ...[
-                      Icon(
-                        item.isPaused
-                            ? Ionicons.play_outline
-                            : Ionicons.pause_outline,
-                        size: 20,
+                  ),
+                  if (widget.item.isDownloadingOrPaused)
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 4),
+                      child: LinearProgressIndicator(
+                        value: widget.item.actual / widget.item.total,
+                        backgroundColor:
+                            context.isDark ? Colors.grey[700] : Colors.grey[50],
+                        color: widget.item.status == DownloadStatus.paused
+                            ? Colors.grey
+                            : context.primaryColor,
                       ),
-                      const SizedBox(width: 15),
-                      const Icon(Ionicons.close_outline, size: 20),
-                    ] else ...[
-                      const Icon(Ionicons.trash_bin_outline, size: 20),
-                    ],
-                  ],
-                ),
-                if (item.isDownloadingOrPaused)
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 4),
-                    child: LinearProgressIndicator(
-                      value: item.actual / item.total,
-                      backgroundColor:
-                          context.isDark ? Colors.grey[700] : Colors.grey[50],
-                      color: item.status == DownloadStatus.paused
-                          ? Colors.grey
-                          : context.primaryColor,
-                    ),
-                  )
-              ],
+                    )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

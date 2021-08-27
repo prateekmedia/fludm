@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:fludm/utils/utils.dart';
-import 'package:fludm/widgets/widgets.dart';
+import 'package:sticky_headers/sticky_headers.dart';
+
+import 'utils/utils.dart';
+import 'widgets/widgets.dart';
 
 void main() {
   runApp(const MyApp());
@@ -40,6 +42,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int currentIndex = 0;
+
+  double downloadHeader = 0;
+  double completedHeader = 0;
+  double settingsHeader = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -143,91 +149,152 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
               children: [
                 if (currentIndex <= 1) ...[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Downloading",
-                        style: context.textTheme.headline6!
-                            .copyWith(fontWeight: FontWeight.w600),
-                      ),
-                      Row(
-                        children: const [
-                          HeaderButton(
-                            icon: Ionicons.play_outline,
-                            tooltip: 'Resume selected',
+                  StickyHeader(
+                    callback: (offset) => WidgetsBinding.instance!
+                        .addPostFrameCallback((_) => setState(() {
+                              downloadHeader = offset >= 0 ? 0 : offset;
+                            })),
+                    header: AnimatedContainer(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10 - 5 * downloadHeader.abs()),
+                      color: (context.isDark
+                              ? Colors.grey[900]!
+                              : Colors.grey[200]!)
+                          .withOpacity(downloadHeader.abs()),
+                      duration: const Duration(milliseconds: 250),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Downloading",
+                            style: context.textTheme.headline6!
+                                .copyWith(fontWeight: FontWeight.w600),
                           ),
-                          HeaderButton(
-                            icon: Ionicons.pause_outline,
-                            tooltip: 'Pause selected',
-                          ),
-                          HeaderButton(
-                            icon: Ionicons.close_outline,
-                            tooltip: 'Cancel selected',
-                          ),
+                          Row(
+                            children: const [
+                              HeaderButton(
+                                icon: Ionicons.play_outline,
+                                tooltip: 'Resume selected',
+                              ),
+                              HeaderButton(
+                                icon: Ionicons.pause_outline,
+                                tooltip: 'Pause selected',
+                              ),
+                              HeaderButton(
+                                icon: Ionicons.close_outline,
+                                tooltip: 'Cancel selected',
+                              ),
+                            ],
+                          )
                         ],
                       ),
-                    ],
+                    ),
+                    content: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                          children: downloadItems
+                              .where((element) => element.isDownloadingOrPaused)
+                              .map(
+                                (item) => DownloadItemWidget(item: item),
+                              )
+                              .toList()),
+                    ),
                   ),
-                  const SizedBox(height: 6),
-                  ...downloadItems
-                      .where((element) => element.isDownloadingOrPaused)
-                      .map(
-                        (item) => DownloadItemWidget(item: item),
-                      ),
+                  // const SizedBox(height: 6),
                   const SizedBox(height: 15),
                 ],
                 if (currentIndex <= 2 && currentIndex != 1) ...[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Completed",
-                        style: context.textTheme.headline6!
-                            .copyWith(fontWeight: FontWeight.w600),
-                      ),
-                      Row(
-                        children: const [
-                          HeaderButton(
-                            icon: Icons.restart_alt_outlined,
-                            tooltip: 'Restart selected',
+                  StickyHeader(
+                    callback: (offset) => WidgetsBinding.instance!
+                        .addPostFrameCallback((_) => setState(() {
+                              completedHeader = offset >= 0 ? 0 : offset;
+                            })),
+                    header: AnimatedContainer(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10 - 5 * completedHeader.abs()),
+                      color: (context.isDark
+                              ? Colors.grey[900]!
+                              : Colors.grey[200]!)
+                          .withOpacity(completedHeader.abs()),
+                      duration: const Duration(milliseconds: 250),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Completed",
+                            style: context.textTheme.headline6!
+                                .copyWith(fontWeight: FontWeight.w600),
                           ),
-                          HeaderButton(
-                            icon: Ionicons.trash_bin_outline,
-                            tooltip: 'Delete selected',
+                          Row(
+                            children: const [
+                              HeaderButton(
+                                icon: Icons.restart_alt_outlined,
+                                tooltip: 'Restart selected',
+                              ),
+                              HeaderButton(
+                                icon: Ionicons.trash_bin_outline,
+                                tooltip: 'Delete selected',
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 6),
-                  ...downloadItems
-                      .where((element) => element.isCancelledOrCompleted)
-                      .map(
-                        (item) => DownloadItemWidget(item: item),
+                    ),
+                    content: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        children: downloadItems
+                            .where((element) => element.isCancelledOrCompleted)
+                            .map(
+                              (item) => DownloadItemWidget(item: item),
+                            )
+                            .toList(),
                       ),
+                    ),
+                  ),
                 ],
                 if (currentIndex == 3) ...[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Settings",
-                        style: context.textTheme.headline6!
-                            .copyWith(fontWeight: FontWeight.w600),
-                      ),
-                      Row(
-                        children: const [
-                          HeaderButton(
-                            icon: Icons.restart_alt_outlined,
-                            tooltip: 'Restore defaults',
+                  StickyHeader(
+                    callback: (offset) => WidgetsBinding.instance!
+                        .addPostFrameCallback((_) => setState(() {
+                              settingsHeader = offset >= 0 ? 0 : offset;
+                            })),
+                    header: AnimatedContainer(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10 - 5 * settingsHeader.abs()),
+                      color: (context.isDark
+                              ? Colors.grey[900]!
+                              : Colors.grey[200]!)
+                          .withOpacity(settingsHeader.abs()),
+                      duration: const Duration(milliseconds: 250),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Settings",
+                            style: context.textTheme.headline6!
+                                .copyWith(fontWeight: FontWeight.w600),
+                          ),
+                          Row(
+                            children: const [
+                              HeaderButton(
+                                icon: Icons.restart_alt_outlined,
+                                tooltip: 'Restore defaults',
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
+                    ),
+                    content: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text("TBD"),
+                    ),
                   ),
                 ],
               ],

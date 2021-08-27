@@ -92,7 +92,7 @@ class _SidebarItemBuilder extends StatelessWidget {
     required this.label,
     required this.icon,
     required this.isActive,
-    this.margin = const EdgeInsets.only(bottom: 15),
+    this.margin = const EdgeInsets.only(bottom: 8),
     this.onTap,
   }) : super(key: key);
 
@@ -101,7 +101,7 @@ class _SidebarItemBuilder extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
         margin: margin,
         decoration: BoxDecoration(
           color: isActive ? context.theme.canvasColor.withAlpha(130) : null,
