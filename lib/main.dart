@@ -42,7 +42,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int currentIndex = 0;
-
+  List<DownloadItem> activeItemList = [];
   double downloadHeader = 0;
   double completedHeader = 0;
   double settingsHeader = 0;
@@ -55,6 +55,10 @@ class _MyHomePageState extends State<MyHomePage> {
         type: FileType.audio,
         actual: 4200000,
         total: 9000000,
+        onItemSelected: (active, item) => active
+            ? activeItemList.add(item)
+            : activeItemList
+                .removeWhere((element) => element.name == item.name),
         path: "/home/user/",
         datetime: DateTime.now().subtract(const Duration(seconds: 10)),
         status: DownloadStatus.downloading,
@@ -64,6 +68,10 @@ class _MyHomePageState extends State<MyHomePage> {
         type: FileType.video,
         actual: 38000000,
         total: 50000000,
+        onItemSelected: (active, item) => active
+            ? activeItemList.add(item)
+            : activeItemList
+                .removeWhere((element) => element.name == item.name),
         path: "/home/user/",
         datetime:
             DateTime.now().subtract(const Duration(seconds: 10, days: 10)),
@@ -74,6 +82,10 @@ class _MyHomePageState extends State<MyHomePage> {
         type: FileType.compressed,
         actual: 8000000,
         total: 40000000,
+        onItemSelected: (active, item) => active
+            ? activeItemList.add(item)
+            : activeItemList
+                .removeWhere((element) => element.name == item.name),
         path: "/home/user/",
         datetime: DateTime.now().subtract(const Duration(seconds: 10, days: 1)),
         status: DownloadStatus.downloading,
@@ -83,6 +95,10 @@ class _MyHomePageState extends State<MyHomePage> {
         type: FileType.image,
         actual: 300000,
         total: 300000,
+        onItemSelected: (active, item) => active
+            ? activeItemList.add(item)
+            : activeItemList
+                .removeWhere((element) => element.name == item.name),
         path: "/home/user/",
         datetime: DateTime.now().subtract(const Duration(seconds: 10, days: 1)),
         status: DownloadStatus.completed,
@@ -92,6 +108,10 @@ class _MyHomePageState extends State<MyHomePage> {
         type: FileType.program,
         actual: 50000000,
         total: 300000000,
+        onItemSelected: (active, item) => active
+            ? activeItemList.add(item)
+            : activeItemList
+                .removeWhere((element) => element.name == item.name),
         path: "/home/user/",
         datetime: DateTime.now().subtract(const Duration(seconds: 10, days: 4)),
         status: DownloadStatus.cancelled,
@@ -101,6 +121,10 @@ class _MyHomePageState extends State<MyHomePage> {
         type: FileType.other,
         actual: 600000000,
         total: 600000000,
+        onItemSelected: (active, item) => active
+            ? activeItemList.add(item)
+            : activeItemList
+                .removeWhere((element) => element.name == item.name),
         path: "/home/user/",
         datetime: DateTime.now().subtract(const Duration(seconds: 10, days: 6)),
         status: DownloadStatus.completed,
@@ -174,17 +198,35 @@ class _MyHomePageState extends State<MyHomePage> {
                                 .copyWith(fontWeight: FontWeight.w600),
                           ),
                           Row(
-                            children: const [
+                            children: [
                               HeaderButton(
                                 icon: Ionicons.play_outline,
+                                onTap: activeItemList
+                                        .where((element) =>
+                                            element.isDownloadingOrPaused)
+                                        .isNotEmpty
+                                    ? () {}
+                                    : null,
                                 tooltip: 'Resume selected',
                               ),
                               HeaderButton(
                                 icon: Ionicons.pause_outline,
+                                onTap: activeItemList
+                                        .where((element) =>
+                                            element.isDownloadingOrPaused)
+                                        .isNotEmpty
+                                    ? () {}
+                                    : null,
                                 tooltip: 'Pause selected',
                               ),
                               HeaderButton(
                                 icon: Ionicons.close_outline,
+                                onTap: activeItemList
+                                        .where((element) =>
+                                            element.isDownloadingOrPaused)
+                                        .isNotEmpty
+                                    ? () {}
+                                    : null,
                                 tooltip: 'Cancel selected',
                               ),
                             ],
@@ -230,13 +272,25 @@ class _MyHomePageState extends State<MyHomePage> {
                                 .copyWith(fontWeight: FontWeight.w600),
                           ),
                           Row(
-                            children: const [
+                            children: [
                               HeaderButton(
                                 icon: Icons.restart_alt_outlined,
+                                onTap: activeItemList
+                                        .where((element) =>
+                                            element.isCancelledOrCompleted)
+                                        .isNotEmpty
+                                    ? () {}
+                                    : null,
                                 tooltip: 'Restart selected',
                               ),
                               HeaderButton(
                                 icon: Ionicons.trash_bin_outline,
+                                onTap: activeItemList
+                                        .where((element) =>
+                                            element.isCancelledOrCompleted)
+                                        .isNotEmpty
+                                    ? () {}
+                                    : null,
                                 tooltip: 'Delete selected',
                               ),
                             ],

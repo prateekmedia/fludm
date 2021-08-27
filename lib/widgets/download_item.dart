@@ -8,6 +8,7 @@ class DownloadItem {
   final String name;
   final int actual;
   final int total;
+  final Function(bool active, DownloadItem item)? onItemSelected;
   final FileType type;
   final DownloadStatus status;
   final String path;
@@ -18,6 +19,7 @@ class DownloadItem {
     required this.actual,
     required this.total,
     required this.type,
+    required this.onItemSelected,
     required this.status,
     required this.path,
     required this.datetime,
@@ -48,9 +50,13 @@ class DownloadItemWidget extends StatefulWidget {
 
 class _DownloadItemWidgetState extends State<DownloadItemWidget> {
   bool isHovered = false;
-  set setHovered(bool hover) => setState(() {
-        isHovered = hover;
-      });
+  bool isActive = false;
+  set setHovered(bool hover) => setState(() => isHovered = hover);
+  set setActive(bool active) {
+    setState(() => isActive = active);
+    widget.item.onItemSelected?.call(active, widget.item);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
@@ -58,25 +64,30 @@ class _DownloadItemWidgetState extends State<DownloadItemWidget> {
       onExit: (_) => setHovered = false,
       child: AnimatedContainer(
         decoration: BoxDecoration(
-          color: isHovered
-              ? context.isDark
-                  ? Colors.grey[900]
-                  : Colors.grey[200]
-              : Colors.transparent,
+          color: (context.isDark ? Colors.grey[900]! : Colors.grey[200]!)
+              .withOpacity(isActive
+                  ? 1
+                  : isHovered
+                      ? 0.6
+                      : 0),
           borderRadius: BorderRadius.circular(15),
         ),
         curve: Curves.fastOutSlowIn,
         padding: const EdgeInsets.all(14),
+        margin: const EdgeInsets.symmetric(vertical: 4),
         duration: const Duration(milliseconds: 150),
         child: Row(
           children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: widget.item.type.getColor,
+            GestureDetector(
+              onTap: () => setActive = !isActive,
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: widget.item.type.getColor,
+                ),
+                child: widget.item.type.getIcon,
               ),
-              child: widget.item.type.getIcon,
             ),
             const SizedBox(width: 12),
             Expanded(
