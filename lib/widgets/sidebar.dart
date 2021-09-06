@@ -31,8 +31,7 @@ class Sidebar extends StatelessWidget {
         color: context.isDark ? Colors.grey[900] : Colors.grey[200],
         border: Border(
           right: BorderSide(
-            color: (context.isDark ? Colors.grey[800]! : Colors.grey[300]!)
-                .withAlpha(60),
+            color: (context.isDark ? Colors.grey[800]! : Colors.grey[300]!).withAlpha(60),
           ),
         ),
       ),
@@ -122,17 +121,13 @@ class _SidebarItemBuilder extends StatelessWidget {
                   data: context.theme.copyWith(
                     iconTheme: IconThemeData(
                       size: 23,
-                      color: isActive
-                          ? context.primaryColor
-                          : context.theme.iconTheme.color,
+                      color: isActive ? context.primaryColor : context.theme.iconTheme.color,
                     ),
                   ),
                   child: icon!),
               const SizedBox(width: 8),
             ],
-            Text(label,
-                style:
-                    TextStyle(color: isActive ? context.primaryColor : null)),
+            Text(label, style: TextStyle(color: isActive ? context.primaryColor : null)),
           ],
         ),
       ),

@@ -55,10 +55,8 @@ class _MyHomePageState extends State<MyHomePage> {
         type: FileType.audio,
         actual: 4200000,
         total: 9000000,
-        onItemSelected: (active, item) => active
-            ? activeItemList.add(item)
-            : activeItemList
-                .removeWhere((element) => element.name == item.name),
+        onItemSelected: (active, item) =>
+            active ? activeItemList.add(item) : activeItemList.removeWhere((element) => element.name == item.name),
         path: "/home/user/",
         datetime: DateTime.now().subtract(const Duration(seconds: 10)),
         status: DownloadStatus.downloading,
@@ -68,13 +66,10 @@ class _MyHomePageState extends State<MyHomePage> {
         type: FileType.video,
         actual: 38000000,
         total: 50000000,
-        onItemSelected: (active, item) => active
-            ? activeItemList.add(item)
-            : activeItemList
-                .removeWhere((element) => element.name == item.name),
+        onItemSelected: (active, item) =>
+            active ? activeItemList.add(item) : activeItemList.removeWhere((element) => element.name == item.name),
         path: "/home/user/",
-        datetime:
-            DateTime.now().subtract(const Duration(seconds: 10, days: 10)),
+        datetime: DateTime.now().subtract(const Duration(seconds: 10, days: 10)),
         status: DownloadStatus.paused,
       ),
       DownloadItem(
@@ -82,10 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
         type: FileType.compressed,
         actual: 8000000,
         total: 40000000,
-        onItemSelected: (active, item) => active
-            ? activeItemList.add(item)
-            : activeItemList
-                .removeWhere((element) => element.name == item.name),
+        onItemSelected: (active, item) =>
+            active ? activeItemList.add(item) : activeItemList.removeWhere((element) => element.name == item.name),
         path: "/home/user/",
         datetime: DateTime.now().subtract(const Duration(seconds: 10, days: 1)),
         status: DownloadStatus.downloading,
@@ -95,10 +88,8 @@ class _MyHomePageState extends State<MyHomePage> {
         type: FileType.image,
         actual: 300000,
         total: 300000,
-        onItemSelected: (active, item) => active
-            ? activeItemList.add(item)
-            : activeItemList
-                .removeWhere((element) => element.name == item.name),
+        onItemSelected: (active, item) =>
+            active ? activeItemList.add(item) : activeItemList.removeWhere((element) => element.name == item.name),
         path: "/home/user/",
         datetime: DateTime.now().subtract(const Duration(seconds: 10, days: 1)),
         status: DownloadStatus.completed,
@@ -108,10 +99,8 @@ class _MyHomePageState extends State<MyHomePage> {
         type: FileType.program,
         actual: 50000000,
         total: 300000000,
-        onItemSelected: (active, item) => active
-            ? activeItemList.add(item)
-            : activeItemList
-                .removeWhere((element) => element.name == item.name),
+        onItemSelected: (active, item) =>
+            active ? activeItemList.add(item) : activeItemList.removeWhere((element) => element.name == item.name),
         path: "/home/user/",
         datetime: DateTime.now().subtract(const Duration(seconds: 10, days: 4)),
         status: DownloadStatus.cancelled,
@@ -121,10 +110,8 @@ class _MyHomePageState extends State<MyHomePage> {
         type: FileType.other,
         actual: 600000000,
         total: 600000000,
-        onItemSelected: (active, item) => active
-            ? activeItemList.add(item)
-            : activeItemList
-                .removeWhere((element) => element.name == item.name),
+        onItemSelected: (active, item) =>
+            active ? activeItemList.add(item) : activeItemList.removeWhere((element) => element.name == item.name),
         path: "/home/user/",
         datetime: DateTime.now().subtract(const Duration(seconds: 10, days: 6)),
         status: DownloadStatus.completed,
@@ -150,10 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 margin: const EdgeInsets.symmetric(vertical: 24),
                 child: Text(
                   "FluDM",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline6!
-                      .copyWith(fontWeight: FontWeight.bold, letterSpacing: 1),
+                  style: Theme.of(context).textTheme.headline6!.copyWith(fontWeight: FontWeight.bold, letterSpacing: 1),
                 ),
               ),
               items: [
@@ -174,121 +158,98 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
             child: ListView(
               children: [
-                if (currentIndex <= 1) ...[
-                  StickyHeader(
-                    callback: (offset) => WidgetsBinding.instance!
-                        .addPostFrameCallback((_) => setState(() {
-                              downloadHeader = offset >= 0 ? 0 : offset;
-                            })),
-                    header: AnimatedContainer(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 10 - 5 * downloadHeader.abs()),
-                      color: (context.isDark
-                              ? Colors.grey[900]!
-                              : Colors.grey[200]!)
-                          .withOpacity(downloadHeader.abs()),
-                      duration: const Duration(milliseconds: 250),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Downloading",
-                            style: context.textTheme.headline6!
-                                .copyWith(fontWeight: FontWeight.w600),
-                          ),
-                          Row(
-                            children: [
-                              HeaderButton(
-                                icon: Ionicons.play_outline,
-                                onTap: activeItemList
-                                        .where((element) =>
-                                            element.isDownloadingOrPaused)
-                                        .isNotEmpty
-                                    ? () {}
-                                    : null,
-                                tooltip: 'Resume selected',
-                              ),
-                              HeaderButton(
-                                icon: Ionicons.pause_outline,
-                                onTap: activeItemList
-                                        .where((element) =>
-                                            element.isDownloadingOrPaused)
-                                        .isNotEmpty
-                                    ? () {}
-                                    : null,
-                                tooltip: 'Pause selected',
-                              ),
-                              HeaderButton(
-                                icon: Ionicons.close_outline,
-                                onTap: activeItemList
-                                        .where((element) =>
-                                            element.isDownloadingOrPaused)
-                                        .isNotEmpty
-                                    ? () {}
-                                    : null,
-                                tooltip: 'Cancel selected',
-                              ),
-                            ],
-                          )
-                        ],
+                ...[
+                  Visibility(
+                    visible: currentIndex <= 1,
+                    child: StickyHeader(
+                      callback: (offset) => WidgetsBinding.instance!.addPostFrameCallback((_) => setState(() {
+                            downloadHeader = offset >= 0 ? 0 : offset;
+                          })),
+                      header: AnimatedContainer(
+                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10 - 5 * downloadHeader.abs()),
+                        color:
+                            (context.isDark ? Colors.grey[900]! : Colors.grey[200]!).withOpacity(downloadHeader.abs()),
+                        duration: const Duration(milliseconds: 250),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Downloading",
+                              style: context.textTheme.headline6!.copyWith(fontWeight: FontWeight.w600),
+                            ),
+                            Row(
+                              children: [
+                                HeaderButton(
+                                  icon: Ionicons.play_outline,
+                                  onTap: activeItemList.where((element) => element.isDownloadingOrPaused).isNotEmpty
+                                      ? () {}
+                                      : null,
+                                  tooltip: 'Resume selected',
+                                ),
+                                HeaderButton(
+                                  icon: Ionicons.pause_outline,
+                                  onTap: activeItemList.where((element) => element.isDownloadingOrPaused).isNotEmpty
+                                      ? () {}
+                                      : null,
+                                  tooltip: 'Pause selected',
+                                ),
+                                HeaderButton(
+                                  icon: Ionicons.close_outline,
+                                  onTap: activeItemList.where((element) => element.isDownloadingOrPaused).isNotEmpty
+                                      ? () {}
+                                      : null,
+                                  tooltip: 'Cancel selected',
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    content: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Column(
-                          children: downloadItems
-                              .where((element) => element.isDownloadingOrPaused)
-                              .map(
-                                (item) => DownloadItemWidget(item: item),
-                              )
-                              .toList()),
+                      content: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                            children: downloadItems
+                                .where((element) => element.isDownloadingOrPaused)
+                                .map(
+                                  (item) => DownloadItemWidget(item: item),
+                                )
+                                .toList()),
+                      ),
                     ),
                   ),
                   // const SizedBox(height: 6),
                   const SizedBox(height: 15),
                 ],
-                if (currentIndex <= 2 && currentIndex != 1) ...[
-                  StickyHeader(
-                    callback: (offset) => WidgetsBinding.instance!
-                        .addPostFrameCallback((_) => setState(() {
-                              completedHeader = offset >= 0 ? 0 : offset;
-                            })),
+                Visibility(
+                  visible: currentIndex <= 2 && currentIndex != 1,
+                  child: StickyHeader(
+                    callback: (offset) => WidgetsBinding.instance!.addPostFrameCallback((_) => setState(() {
+                          completedHeader = offset >= 0 ? 0 : offset;
+                        })),
                     header: AnimatedContainer(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 10 - 5 * completedHeader.abs()),
-                      color: (context.isDark
-                              ? Colors.grey[900]!
-                              : Colors.grey[200]!)
-                          .withOpacity(completedHeader.abs()),
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10 - 5 * completedHeader.abs()),
+                      color:
+                          (context.isDark ? Colors.grey[900]! : Colors.grey[200]!).withOpacity(completedHeader.abs()),
                       duration: const Duration(milliseconds: 250),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             "Completed",
-                            style: context.textTheme.headline6!
-                                .copyWith(fontWeight: FontWeight.w600),
+                            style: context.textTheme.headline6!.copyWith(fontWeight: FontWeight.w600),
                           ),
                           Row(
                             children: [
                               HeaderButton(
                                 icon: Icons.restart_alt_outlined,
-                                onTap: activeItemList
-                                        .where((element) =>
-                                            element.isCancelledOrCompleted)
-                                        .isNotEmpty
+                                onTap: activeItemList.where((element) => element.isCancelledOrCompleted).isNotEmpty
                                     ? () {}
                                     : null,
                                 tooltip: 'Restart selected',
                               ),
                               HeaderButton(
                                 icon: Ionicons.trash_bin_outline,
-                                onTap: activeItemList
-                                        .where((element) =>
-                                            element.isCancelledOrCompleted)
-                                        .isNotEmpty
+                                onTap: activeItemList.where((element) => element.isCancelledOrCompleted).isNotEmpty
                                     ? () {}
                                     : null,
                                 tooltip: 'Delete selected',
@@ -310,44 +271,41 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                   ),
-                ],
-                if (currentIndex == 3) ...[
-                  StickyHeader(
-                    callback: (offset) => WidgetsBinding.instance!
-                        .addPostFrameCallback((_) => setState(() {
-                              settingsHeader = offset >= 0 ? 0 : offset;
-                            })),
-                    header: AnimatedContainer(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 10 - 5 * settingsHeader.abs()),
-                      color: (context.isDark
-                              ? Colors.grey[900]!
-                              : Colors.grey[200]!)
-                          .withOpacity(settingsHeader.abs()),
-                      duration: const Duration(milliseconds: 250),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Settings",
-                            style: context.textTheme.headline6!
-                                .copyWith(fontWeight: FontWeight.w600),
-                          ),
-                          Row(
-                            children: const [
-                              HeaderButton(
-                                icon: Icons.restart_alt_outlined,
-                                tooltip: 'Restore defaults',
-                              ),
-                            ],
-                          ),
-                        ],
+                ),
+                ...[
+                  Visibility(
+                    visible: currentIndex == 3,
+                    child: StickyHeader(
+                      callback: (offset) => WidgetsBinding.instance!.addPostFrameCallback((_) => setState(() {
+                            settingsHeader = offset >= 0 ? 0 : offset;
+                          })),
+                      header: AnimatedContainer(
+                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10 - 5 * settingsHeader.abs()),
+                        color:
+                            (context.isDark ? Colors.grey[900]! : Colors.grey[200]!).withOpacity(settingsHeader.abs()),
+                        duration: const Duration(milliseconds: 250),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Settings",
+                              style: context.textTheme.headline6!.copyWith(fontWeight: FontWeight.w600),
+                            ),
+                            Row(
+                              children: const [
+                                HeaderButton(
+                                  icon: Icons.restart_alt_outlined,
+                                  tooltip: 'Restore defaults',
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    content: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text("TBD"),
+                      content: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Text("TBD"),
+                      ),
                     ),
                   ),
                 ],
@@ -355,6 +313,28 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: const Text('Add Url'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const TextField(),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: const Text('Download'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -374,8 +354,7 @@ class HeaderButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color color =
-        onTap != null ? context.textTheme.bodyText1!.color! : Colors.grey;
+    Color color = onTap != null ? context.textTheme.bodyText1!.color! : Colors.grey;
     var child = Container(
       padding: const EdgeInsets.all(5),
       margin: const EdgeInsets.only(right: 12),

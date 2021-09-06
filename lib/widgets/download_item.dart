@@ -64,12 +64,11 @@ class _DownloadItemWidgetState extends State<DownloadItemWidget> {
       onExit: (_) => setHovered = false,
       child: AnimatedContainer(
         decoration: BoxDecoration(
-          color: (context.isDark ? Colors.grey[900]! : Colors.grey[200]!)
-              .withOpacity(isActive
-                  ? 1
-                  : isHovered
-                      ? 0.6
-                      : 0),
+          color: (context.isDark ? Colors.grey[900]! : Colors.grey[200]!).withOpacity(isActive
+              ? 1
+              : isHovered
+                  ? 0.6
+                  : 0),
           borderRadius: BorderRadius.circular(15),
         ),
         curve: Curves.fastOutSlowIn,
@@ -84,7 +83,7 @@ class _DownloadItemWidgetState extends State<DownloadItemWidget> {
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  color: widget.item.type.getColor,
+                  color: widget.item.type.getColor.darken(isActive ? 40 : 1),
                 ),
                 child: widget.item.type.getIcon,
               ),
@@ -105,17 +104,11 @@ class _DownloadItemWidgetState extends State<DownloadItemWidget> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            (widget.item.isDownloadingOrPaused
-                                    ? widget.item.actual.getFileSize + ' / '
-                                    : '') +
+                            (widget.item.isDownloadingOrPaused ? widget.item.actual.getFileSize + ' / ' : '') +
                                 "${widget.item.total.getFileSize}   ·   ${widget.item.isDownloadingOrPaused ? "3 MB/s   ·   " : ""}"
                                     "${DateFormat('MMM dd yyyy').format(widget.item.datetime)}   ·   " +
-                                (widget.item.isDownloading
-                                    ? "40 min"
-                                    : describeEnum(widget.item.status)
-                                        .capitalize),
-                            style: context.textTheme.bodyText2!
-                                .copyWith(fontSize: 12),
+                                (widget.item.isDownloading ? "40 min" : describeEnum(widget.item.status).capitalize),
+                            style: context.textTheme.bodyText2!.copyWith(fontSize: 12),
                           ),
                         ],
                       )),
@@ -130,9 +123,7 @@ class _DownloadItemWidgetState extends State<DownloadItemWidget> {
                       ],
                       if (widget.item.isDownloadingOrPaused) ...[
                         Icon(
-                          widget.item.isPaused
-                              ? Ionicons.play_outline
-                              : Ionicons.pause_outline,
+                          widget.item.isPaused ? Ionicons.play_outline : Ionicons.pause_outline,
                           size: 20,
                         ),
                         const SizedBox(width: 15),
@@ -147,11 +138,8 @@ class _DownloadItemWidgetState extends State<DownloadItemWidget> {
                       margin: const EdgeInsets.symmetric(vertical: 4),
                       child: LinearProgressIndicator(
                         value: widget.item.actual / widget.item.total,
-                        backgroundColor:
-                            context.isDark ? Colors.grey[700] : Colors.grey[50],
-                        color: widget.item.status == DownloadStatus.paused
-                            ? Colors.grey
-                            : context.primaryColor,
+                        backgroundColor: context.isDark ? Colors.grey[700] : Colors.grey[50],
+                        color: widget.item.status == DownloadStatus.paused ? Colors.grey : context.primaryColor,
                       ),
                     )
                 ],

@@ -1,3 +1,4 @@
+export 'color_extensions.dart';
 export 'context_extensions.dart';
 export 'download_status.dart';
 export 'file_type.dart';
